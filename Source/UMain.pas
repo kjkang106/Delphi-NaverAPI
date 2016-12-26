@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, UNTTS, ComCtrls, IniFiles;
+  Dialogs, StdCtrls, ExtCtrls, ComCtrls, IniFiles, UNTTS, UNMap;
 
 type
   TFMain = class(TForm)
@@ -16,18 +16,28 @@ type
     btTTS: TButton;
     rgSpeeker: TRadioGroup;
     tbSpeed: TTrackBar;
-    lbLog: TListBox;
-    memoOut: TMemo;
+    memoTTS: TMemo;
     Label1: TLabel;
     Label2: TLabel;
     etNAPIClientID: TEdit;
     etNAPIClientSecret: TEdit;
+    tsMap: TTabSheet;
+    Panel2: TPanel;
+    btShowMap: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    panNMap: TPanel;
+    Label3: TLabel;
+    etNAPIWebServiceURL: TEdit;
+    Label4: TLabel;
+    lbLog: TListBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btTTSClick(Sender: TObject);
     procedure tbSpeedChange(Sender: TObject);
     procedure pcMainChange(Sender: TObject);
     procedure pcMainChanging(Sender: TObject; var AllowChange: Boolean);
+    procedure btShowMapClick(Sender: TObject);
   private
     { Private declarations }
     procedure logM(Msg: string);
@@ -53,10 +63,21 @@ procedure TFMain.btTTSClick(Sender: TObject);
 var
   Text: string;
 begin
-  Text:= memoOut.Text;
+  Text:= memoTTS.Text;
 
   logM('getTTS : ' + Text);
   getTTS(Text, onTTSResult, TNTTSSpeeker(rgSpeeker.ItemIndex), 0 - tbSpeed.Position);
+end;
+
+procedure TFMain.btShowMapClick(Sender: TObject);
+var
+  Lat, Lng: Double;
+begin
+  Lat:= 37.566535;
+  Lng:= 126.9779692;
+
+  logM('getNMap : ' + FloatToStr(Lat) + ', ' + FloatToStr(Lng));
+  getNMap(panNMap, Lat, Lng);
 end;
 
 procedure TFMain.FormCreate(Sender: TObject);
@@ -79,8 +100,9 @@ var
 begin
   localIni:= TIniFile.Create(ChangeFileExt(Application.ExeName, '.Ini'));
   try
-    etNAPIClientID.Text    := localIni.ReadString('Init', 'NAPI Client ID', '');
-    etNAPIClientSecret.Text:= localIni.ReadString('Init', 'NAPI Client Secret', '');
+    etNAPIClientID.Text     := localIni.ReadString('Init', 'NAPI Client ID', '');
+    etNAPIClientSecret.Text := localIni.ReadString('Init', 'NAPI Client Secret', '');
+    etNAPIWebServiceURL.Text:= localIni.ReadString('Init', 'NAPI Web Service URL', '');
   finally
     localIni.Free;
   end;
@@ -116,8 +138,7 @@ begin
   if TPageControl(Sender).ActivePage = tsTTS then
   begin
     tbSpeedChange(tbSpeed);
-    memoOut.Clear;
-    lbLog.Clear;
+    memoTTS.Clear;
   end;
 end;
 
@@ -137,16 +158,19 @@ var
   localIni: TIniFile;
 
 begin
-  NAPIClientID:= Trim(etNAPIClientID.Text);
-  NAPIClientSecret:= Trim(etNAPIClientSecret.Text);
+  NAPIClientID     := Trim(etNAPIClientID.Text);
+  NAPIClientSecret := Trim(etNAPIClientSecret.Text);
+  NAPIWebServiceURL:= Trim(etNAPIWebServiceURL.Text);
 
   localIni:= TIniFile.Create(ChangeFileExt(Application.ExeName, '.Ini'));
   try
     localIni.WriteString('Init', 'NAPI Client ID', NAPIClientID);
     localIni.WriteString('Init', 'NAPI Client Secret', NAPIClientSecret);
+    localIni.WriteString('Init', 'NAPI Web Service URL', NAPIWebServiceURL);
   finally
     localIni.Free;
   end;
+  logM('Init Ini was Saved');
 end;
 
 procedure TFMain.tbSpeedChange(Sender: TObject);

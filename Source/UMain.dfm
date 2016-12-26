@@ -1,6 +1,6 @@
 object FMain: TFMain
-  Left = 215
-  Top = 112
+  Left = 364
+  Top = 83
   Caption = 'Sample'
   ClientHeight = 536
   ClientWidth = 1080
@@ -19,20 +19,18 @@ object FMain: TFMain
     Left = 0
     Top = 0
     Width = 1080
-    Height = 536
-    ActivePage = tsInit
+    Height = 432
+    ActivePage = tsTTS
     Align = alClient
     TabOrder = 0
     OnChange = pcMainChange
     OnChanging = pcMainChanging
-    ExplicitLeft = 120
-    ExplicitTop = 46
-    ExplicitWidth = 289
-    ExplicitHeight = 419
+    ExplicitHeight = 536
     object tsInit: TTabSheet
       Caption = 'tsInit'
-      ExplicitWidth = 281
-      ExplicitHeight = 165
+      ExplicitLeft = 8
+      ExplicitTop = 28
+      ExplicitHeight = 508
       object Label1: TLabel
         Left = 32
         Top = 21
@@ -43,11 +41,27 @@ object FMain: TFMain
       end
       object Label2: TLabel
         Left = 32
-        Top = 53
+        Top = 48
         Width = 93
         Height = 13
         Hint = 'Speed'
         Caption = 'Naver Client Secret'
+      end
+      object Label3: TLabel
+        Left = 32
+        Top = 104
+        Width = 82
+        Height = 13
+        Hint = 'Speed'
+        Caption = 'Web Service URL'
+      end
+      object Label4: TLabel
+        Left = 152
+        Top = 128
+        Width = 143
+        Height = 13
+        Hint = 'Speed'
+        Caption = 'Web Service URL for MAP API'
       end
       object etNAPIClientID: TEdit
         Left = 152
@@ -65,10 +79,20 @@ object FMain: TFMain
         ImeName = 'Microsoft IME 2010'
         TabOrder = 1
       end
+      object etNAPIWebServiceURL: TEdit
+        Left = 152
+        Top = 101
+        Width = 321
+        Height = 21
+        ImeName = 'Microsoft IME 2010'
+        TabOrder = 2
+      end
     end
     object tsTTS: TTabSheet
       Caption = 'tsTTS'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 281
       ExplicitHeight = 165
       object Panel1: TPanel
@@ -79,7 +103,6 @@ object FMain: TFMain
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 1080
         object lbSpeed: TLabel
           Left = 568
           Top = 13
@@ -126,28 +149,79 @@ object FMain: TFMain
           OnChange = tbSpeedChange
         end
       end
-      object lbLog: TListBox
-        Left = 0
-        Top = 176
-        Width = 1072
-        Height = 332
-        Align = alBottom
-        ImeName = 'Microsoft IME 2010'
-        ItemHeight = 13
-        TabOrder = 1
-      end
-      object memoOut: TMemo
+      object memoTTS: TMemo
         Left = 0
         Top = 97
         Width = 1072
-        Height = 79
+        Height = 307
         Align = alClient
         ImeName = 'Microsoft IME 2010'
         Lines.Strings = (
           'memoOut')
-        TabOrder = 2
+        TabOrder = 1
         ExplicitHeight = 120
       end
     end
+    object tsMap: TTabSheet
+      Caption = 'tsMap'
+      ImageIndex = 2
+      ExplicitHeight = 508
+      object Panel2: TPanel
+        Left = 0
+        Top = 0
+        Width = 1072
+        Height = 49
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 0
+        object btShowMap: TButton
+          Left = 16
+          Top = 16
+          Width = 75
+          Height = 25
+          Caption = #51648#46020' '#54364#49884
+          TabOrder = 0
+          OnClick = btShowMapClick
+        end
+        object Button2: TButton
+          Left = 96
+          Top = 16
+          Width = 75
+          Height = 25
+          Caption = 'Button1'
+          TabOrder = 1
+        end
+        object Button3: TButton
+          Left = 176
+          Top = 16
+          Width = 75
+          Height = 25
+          Caption = 'Button1'
+          TabOrder = 2
+        end
+      end
+      object panNMap: TPanel
+        Left = 0
+        Top = 49
+        Width = 1072
+        Height = 355
+        Align = alClient
+        TabOrder = 1
+        ExplicitLeft = 232
+        ExplicitTop = 288
+        ExplicitWidth = 185
+        ExplicitHeight = 41
+      end
+    end
+  end
+  object lbLog: TListBox
+    Left = 0
+    Top = 432
+    Width = 1080
+    Height = 104
+    Align = alBottom
+    ImeName = 'Microsoft IME 2010'
+    ItemHeight = 13
+    TabOrder = 1
   end
 end

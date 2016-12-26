@@ -5,7 +5,8 @@ uses
   UMain in 'UMain.pas' {FMain},
   UNTTS in 'TTS\UNTTS.pas',
   UNAPIClient in 'Common\UNAPIClient.pas',
-  UNAPIVAR in 'Common\UNAPIVAR.pas';
+  UNAPIVAR in 'Common\UNAPIVAR.pas',
+  UNMap in 'MAP\UNMap.pas';
 
 {$R *.res}
 
