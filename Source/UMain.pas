@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, ComCtrls, IniFiles, UNTTS, UNMap;
+  Dialogs, StdCtrls, ExtCtrls, ComCtrls, IniFiles;
 
 type
   TFMain = class(TForm)
@@ -23,21 +23,34 @@ type
     etNAPIClientSecret: TEdit;
     tsMap: TTabSheet;
     Panel2: TPanel;
-    btShowMap: TButton;
-    Button2: TButton;
-    Button3: TButton;
+    btMapShow: TButton;
+    btMapGeoAddr: TButton;
+    btMapUp: TButton;
     panNMap: TPanel;
     Label3: TLabel;
     etNAPIWebServiceURL: TEdit;
     Label4: TLabel;
     lbLog: TListBox;
+    btMapRight: TButton;
+    btMapLeft: TButton;
+    btMapDn: TButton;
+    btMapGeoCode: TButton;
+    rgMapType: TRadioGroup;
+    btMapClickEvent: TButton;
+    Button2: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btTTSClick(Sender: TObject);
     procedure tbSpeedChange(Sender: TObject);
     procedure pcMainChange(Sender: TObject);
     procedure pcMainChanging(Sender: TObject; var AllowChange: Boolean);
-    procedure btShowMapClick(Sender: TObject);
+    procedure btMapShowClick(Sender: TObject);
+    procedure btMapGeoAddrClick(Sender: TObject);
+    procedure btMapUpClick(Sender: TObject);
+    procedure btMapLeftClick(Sender: TObject);
+    procedure rgMapTypeClick(Sender: TObject);
+    procedure btMapGeoCodeClick(Sender: TObject);
+    procedure btMapClickEventClick(Sender: TObject);
   private
     { Private declarations }
     procedure logM(Msg: string);
@@ -53,7 +66,7 @@ var
 
 implementation
 
-uses UNAPIVAR;
+uses UNAPIVAR, UNTTS, UNMap, UNMapGeocode;
 
 {$R *.dfm}
 
@@ -69,7 +82,73 @@ begin
   getTTS(Text, onTTSResult, TNTTSSpeeker(rgSpeeker.ItemIndex), 0 - tbSpeed.Position);
 end;
 
-procedure TFMain.btShowMapClick(Sender: TObject);
+procedure TFMain.btMapClickEventClick(Sender: TObject);
+begin
+  if not Assigned(FNMap) then
+    Exit;
+  if TButton(Sender).Tag = 0 then
+  begin
+    FNMap.AddClickEvent;
+    TButton(Sender).Tag:= 1;
+  end
+  else
+  begin
+    FNMap.RemoveClickEvent;
+    TButton(Sender).Tag:= 0;
+  end;
+end;
+
+procedure TFMain.btMapGeoCodeClick(Sender: TObject);
+var
+  zAddress: TzNAPIAddress;
+  Address: TNAPIAddress;
+begin
+  if not Assigned(FNMap) then
+    Exit;
+  zAddress:= TzNAPIAddress.Create;
+  try
+    FNMap.GetGeoCode('∫“¡§∑Œ 6', zAddress);
+
+    for Address in zAddress do
+      logM(FloatToStr(Address.geo_y) + ',' + FloatToStr(Address.geo_x));
+  finally
+    FreeAndNil(zAddress);
+  end;
+end;
+
+procedure TFMain.btMapGeoAddrClick(Sender: TObject);
+var
+  zAddress: TzNAPIAddress;
+  Address: TNAPIAddress;
+begin
+  if not Assigned(FNMap) then
+    Exit;
+  zAddress:= TzNAPIAddress.Create;
+  try
+    FNMap.GetGeoAddress(37.3595316, 127.1052133, zAddress);
+
+    for Address in zAddress do
+      logM(Address.address);
+  finally
+    FreeAndNil(zAddress);
+  end;
+end;
+
+procedure TFMain.btMapLeftClick(Sender: TObject);
+begin
+  if not Assigned(FNMap) then
+    Exit;
+  FNMap.MovePan(TButton(Sender).Tag, 0);
+end;
+
+procedure TFMain.btMapUpClick(Sender: TObject);
+begin
+  if not Assigned(FNMap) then
+    Exit;
+  FNMap.MovePan(0, TButton(Sender).Tag);
+end;
+
+procedure TFMain.btMapShowClick(Sender: TObject);
 var
   Lat, Lng: Double;
 begin
@@ -77,6 +156,7 @@ begin
   Lng:= 126.9779692;
 
   logM('getNMap : ' + FloatToStr(Lat) + ', ' + FloatToStr(Lng));
+  rgMapType.ItemIndex:= 0;
   getNMap(panNMap, Lat, Lng);
 end;
 
@@ -139,6 +219,10 @@ begin
   begin
     tbSpeedChange(tbSpeed);
     memoTTS.Clear;
+  end
+  else if TPageControl(Sender).ActivePage = tsMap then
+  begin
+    btMapShow.Click;
   end;
 end;
 
@@ -153,10 +237,25 @@ begin
   end;
 end;
 
+procedure TFMain.rgMapTypeClick(Sender: TObject);
+begin
+  if not Assigned(FNMap) then
+  begin
+    TRadioGroup(Sender).ItemIndex:= 0;
+    TRadioGroup(Sender).Tag      := 0;
+    Exit;
+  end;
+
+  if TRadioGroup(Sender).ItemIndex <> TRadioGroup(Sender).Tag then
+  begin
+    TRadioGroup(Sender).Tag:= TRadioGroup(Sender).ItemIndex;
+    FNMap.SetMapType(TNMapType(TRadioGroup(Sender).Tag));
+  end;
+end;
+
 procedure TFMain.saveIni;
 var
   localIni: TIniFile;
-
 begin
   NAPIClientID     := Trim(etNAPIClientID.Text);
   NAPIClientSecret := Trim(etNAPIClientSecret.Text);

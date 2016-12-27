@@ -52,6 +52,7 @@
 			<DCCReference Include="Common\UNAPIClient.pas"/>
 			<DCCReference Include="Common\UNAPIVAR.pas"/>
 			<DCCReference Include="MAP\UNMap.pas"/>
+			<DCCReference Include="MAP\UNMapGeocode.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

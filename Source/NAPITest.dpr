@@ -6,7 +6,8 @@ uses
   UNTTS in 'TTS\UNTTS.pas',
   UNAPIClient in 'Common\UNAPIClient.pas',
   UNAPIVAR in 'Common\UNAPIVAR.pas',
-  UNMap in 'MAP\UNMap.pas';
+  UNMap in 'MAP\UNMap.pas',
+  UNMapGeocode in 'MAP\UNMapGeocode.pas';
 
 {$R *.res}
 

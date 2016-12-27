@@ -1,8 +1,8 @@
 object FMain: TFMain
-  Left = 364
-  Top = 83
+  Left = 469
+  Top = 55
   Caption = 'Sample'
-  ClientHeight = 536
+  ClientHeight = 683
   ClientWidth = 1080
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,8 +19,8 @@ object FMain: TFMain
     Left = 0
     Top = 0
     Width = 1080
-    Height = 432
-    ActivePage = tsTTS
+    Height = 579
+    ActivePage = tsMap
     Align = alClient
     TabOrder = 0
     OnChange = pcMainChange
@@ -28,9 +28,6 @@ object FMain: TFMain
     ExplicitHeight = 536
     object tsInit: TTabSheet
       Caption = 'tsInit'
-      ExplicitLeft = 8
-      ExplicitTop = 28
-      ExplicitHeight = 508
       object Label1: TLabel
         Left = 32
         Top = 21
@@ -153,7 +150,7 @@ object FMain: TFMain
         Left = 0
         Top = 97
         Width = 1072
-        Height = 307
+        Height = 454
         Align = alClient
         ImeName = 'Microsoft IME 2010'
         Lines.Strings = (
@@ -165,58 +162,129 @@ object FMain: TFMain
     object tsMap: TTabSheet
       Caption = 'tsMap'
       ImageIndex = 2
-      ExplicitHeight = 508
       object Panel2: TPanel
         Left = 0
         Top = 0
         Width = 1072
-        Height = 49
+        Height = 81
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        object btShowMap: TButton
+        object btMapShow: TButton
           Left = 16
           Top = 16
           Width = 75
           Height = 25
           Caption = #51648#46020' '#54364#49884
           TabOrder = 0
-          OnClick = btShowMapClick
+          OnClick = btMapShowClick
+        end
+        object btMapGeoAddr: TButton
+          Left = 369
+          Top = 36
+          Width = 75
+          Height = 25
+          Caption = #50948'/'#44221#46020#47196#52286#44592
+          TabOrder = 1
+          OnClick = btMapGeoAddrClick
+        end
+        object btMapLeft: TButton
+          Tag = -10
+          Left = 97
+          Top = 17
+          Width = 25
+          Height = 25
+          Caption = #9665
+          TabOrder = 4
+          OnClick = btMapLeftClick
+        end
+        object btMapUp: TButton
+          Tag = -10
+          Left = 122
+          Top = 5
+          Width = 25
+          Height = 25
+          Caption = #9651
+          TabOrder = 2
+          OnClick = btMapUpClick
+        end
+        object btMapDn: TButton
+          Tag = 10
+          Left = 122
+          Top = 30
+          Width = 25
+          Height = 25
+          Caption = #9661
+          TabOrder = 5
+          OnClick = btMapUpClick
+        end
+        object btMapRight: TButton
+          Tag = 10
+          Left = 147
+          Top = 17
+          Width = 25
+          Height = 25
+          Caption = #9655
+          TabOrder = 3
+          OnClick = btMapLeftClick
+        end
+        object btMapGeoCode: TButton
+          Left = 369
+          Top = 5
+          Width = 75
+          Height = 25
+          Caption = #51452#49548#47196#52286#44592
+          TabOrder = 6
+          OnClick = btMapGeoCodeClick
+        end
+        object rgMapType: TRadioGroup
+          Left = 178
+          Top = -1
+          Width = 185
+          Height = 73
+          Caption = 'Map Type'
+          Columns = 2
+          Items.Strings = (
+            #51068#48152
+            #50948#49457
+            #44217#52840
+            #51648#54805#46020)
+          TabOrder = 7
+          OnClick = rgMapTypeClick
+        end
+        object btMapClickEvent: TButton
+          Left = 450
+          Top = 5
+          Width = 75
+          Height = 25
+          Caption = 'ClickEvent'
+          TabOrder = 8
+          OnClick = btMapClickEventClick
         end
         object Button2: TButton
-          Left = 96
-          Top = 16
+          Left = 450
+          Top = 36
           Width = 75
           Height = 25
           Caption = 'Button1'
-          TabOrder = 1
-        end
-        object Button3: TButton
-          Left = 176
-          Top = 16
-          Width = 75
-          Height = 25
-          Caption = 'Button1'
-          TabOrder = 2
+          TabOrder = 9
         end
       end
       object panNMap: TPanel
         Left = 0
-        Top = 49
+        Top = 81
         Width = 1072
-        Height = 355
+        Height = 470
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 232
-        ExplicitTop = 288
-        ExplicitWidth = 185
-        ExplicitHeight = 41
+        ExplicitTop = 122
+        ExplicitHeight = 429
       end
     end
   end
   object lbLog: TListBox
     Left = 0
-    Top = 432
+    Top = 579
     Width = 1080
     Height = 104
     Align = alBottom
