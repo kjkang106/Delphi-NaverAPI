@@ -131,7 +131,7 @@ begin
   outStream:= TMemoryStream.Create;
   try
     OutMsg:= OutMsg + '- Send Start:' + FormatDateTime('HH:NN:SS.zzz',time) + #13#10;
-    Result:= TNAPIClient.SendMsg(TTS_URL, PostMsg, FOutMsg, outStream);
+    Result:= TNAPIClient.PostMsg(TTS_URL, PostMsg, FOutMsg, outStream);
     OutMsg:= OutMsg + '- Send End  :' + FormatDateTime('HH:NN:SS.zzz',time) + #13#10;
     if Result then
       Result:= mp3Play(outStream);

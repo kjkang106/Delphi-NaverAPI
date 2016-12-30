@@ -7,7 +7,9 @@ uses
   UNAPIClient in 'Common\UNAPIClient.pas',
   UNAPIVAR in 'Common\UNAPIVAR.pas',
   UNMap in 'MAP\UNMap.pas',
-  UNMapGeocode in 'MAP\UNMapGeocode.pas';
+  UNMapGeocode in 'MAP\UNMapGeocode.pas',
+  UNSearch in 'SEARCH\UNSearch.pas',
+  UNSearchModel in 'SEARCH\UNSearchModel.pas';
 
 {$R *.res}
 

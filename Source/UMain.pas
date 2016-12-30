@@ -38,6 +38,11 @@ type
     rgMapType: TRadioGroup;
     btMapClickEvent: TButton;
     Button2: TButton;
+    tsSearch: TTabSheet;
+    Panel3: TPanel;
+    btSearch: TButton;
+    etSearch: TEdit;
+    cbSearchType: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btTTSClick(Sender: TObject);
@@ -51,11 +56,28 @@ type
     procedure rgMapTypeClick(Sender: TObject);
     procedure btMapGeoCodeClick(Sender: TObject);
     procedure btMapClickEventClick(Sender: TObject);
+    procedure btSearchClick(Sender: TObject);
+    procedure etSearchKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure logM(Msg: string);
     procedure saveIni;
     procedure loadIni;
+    procedure parseNBlog;
+    procedure parseNNews;
+    procedure parseNBookHD;
+    procedure parseNBookDT;
+    procedure parseNAdultWord;
+    procedure parseNEncyc;
+    procedure parseNMovie;
+    procedure parseNCafeArticle;
+    procedure parseNKin;
+    procedure parseNLocal;
+    procedure parseNErrata;
+    procedure parseNWeb;
+    procedure parseNImage;
+    procedure parseNShop;
+    procedure parseNDoc;
   public
     { Public declarations }
     procedure onTTSResult(Sender:TObject);
@@ -66,7 +88,7 @@ var
 
 implementation
 
-uses UNAPIVAR, UNTTS, UNMap, UNMapGeocode;
+uses UNAPIVAR, UNTTS, UNMap, UNMapGeocode, UNSearch, UNSearchModel;
 
 {$R *.dfm}
 
@@ -80,6 +102,12 @@ begin
 
   logM('getTTS : ' + Text);
   getTTS(Text, onTTSResult, TNTTSSpeeker(rgSpeeker.ItemIndex), 0 - tbSpeed.Position);
+end;
+
+procedure TFMain.etSearchKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    btSearch.Click;
 end;
 
 procedure TFMain.btMapClickEventClick(Sender: TObject);
@@ -148,6 +176,28 @@ begin
   FNMap.MovePan(0, TButton(Sender).Tag);
 end;
 
+procedure TFMain.btSearchClick(Sender: TObject);
+begin
+  logM('getNSearch : ' + cbSearchType.Text + '|' + etSearch.Text);
+  case TNSearchType(cbSearchType.ItemIndex) of
+    nstBlog:        parseNBlog;
+    nstNews:        parseNNews;
+    nstBookHD:      parseNBookHD;
+//    nstBookDT:      parseNBookDT;
+    nstAdultWord:   parseNAdultWord;
+    nstEncyc:       parseNEncyc;
+    nstMovie:       parseNMovie;
+    nstCafeArticle: parseNCafeArticle;
+    nstKin:         parseNKin;
+    nstLocal:       parseNLocal;
+    nstErrata:      parseNErrata;
+    nstWeb:         parseNWeb;
+    nstImage:       parseNImage;
+    nstShop:        parseNShop;
+    nstDoc:         parseNDoc;
+  end;
+end;
+
 procedure TFMain.btMapShowClick(Sender: TObject);
 var
   Lat, Lng: Double;
@@ -213,6 +263,447 @@ begin
   logM(TNTTS(Sender).OutMsg);
 end;
 
+procedure TFMain.parseNAdultWord;
+var
+  NSearch: TNAdultWord;
+  zResult: TzNAdultWord;
+
+  nMax, idx: Integer;
+  AResult: TNSearchAdultWord;
+begin
+  NSearch:= TNAdultWord.Create;
+  zResult:= TzNAdultWord.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        if AResult.adult then
+          logM(etSearch.Text + ' is Adult Word')
+        else
+          logM(etSearch.Text + ' is Not Adult Word');
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNBlog;
+var
+  NSearch: TNBlog;
+  zResult: TzNBlog;
+
+  nMax, idx: Integer;
+  AResult: TNSearchBlog;
+begin
+  NSearch:= TNBlog.Create;
+  zResult:= TzNBlog.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.description);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNBookDT;
+var
+  NSearch: TNBookDT;
+  zResult: TzNBookDT;
+
+  nMax, idx: Integer;
+  AResult: TNSearchBookDT;
+begin
+  NSearch:= TNBookDT.Create;
+  zResult:= TzNBookDT.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNBookHD;
+var
+  NSearch: TNBookHD;
+  zResult: TzNBookHD;
+
+  nMax, idx: Integer;
+  AResult: TNSearchBookHD;
+begin
+  NSearch:= TNBookHD.Create;
+  zResult:= TzNBookHD.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNCafeArticle;
+var
+  NSearch: TNCafe;
+  zResult: TzNCafe;
+
+  nMax, idx: Integer;
+  AResult: TNSearchCafeArticle;
+begin
+  NSearch:= TNCafe.Create;
+  zResult:= TzNCafe.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNDoc;
+var
+  NSearch: TNDoc;
+  zResult: TzNDoc;
+
+  nMax, idx: Integer;
+  AResult: TNSearchDoc;
+begin
+  NSearch:= TNDoc.Create;
+  zResult:= TzNDoc.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNEncyc;
+var
+  NSearch: TNEncyc;
+  zResult: TzNEncyc;
+
+  nMax, idx: Integer;
+  AResult: TNSearchEncyc;
+begin
+  NSearch:= TNEncyc.Create;
+  zResult:= TzNEncyc.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNErrata;
+var
+  NSearch: TNErrata;
+  zResult: TzNErrata;
+
+  nMax, idx: Integer;
+  AResult: TNSearchErrata;
+begin
+  NSearch:= TNErrata.Create;
+  zResult:= TzNErrata.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        if AResult.errata = ''  then
+          logM(etSearch.Text + ' is Correct Word')
+        else
+          logM(etSearch.Text + ' is not Correct Word => ' + AResult.errata);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNImage;
+var
+  NSearch: TNImage;
+  zResult: TzNImage;
+
+  nMax, idx: Integer;
+  AResult: TNSearchImage;
+begin
+  NSearch:= TNImage.Create;
+  zResult:= TzNImage.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNKin;
+var
+  NSearch: TNKin;
+  zResult: TzNKin;
+
+  nMax, idx: Integer;
+  AResult: TNSearchKin;
+begin
+  NSearch:= TNKin.Create;
+  zResult:= TzNKin.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNLocal;
+var
+  NSearch: TNLocal;
+  zResult: TzNLocal;
+
+  nMax, idx: Integer;
+  AResult: TNSearchLocal;
+begin
+  NSearch:= TNLocal.Create;
+  zResult:= TzNLocal.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNMovie;
+var
+  NSearch: TNMovie;
+  zResult: TzNMovie;
+
+  nMax, idx: Integer;
+  AResult: TNSearchMovie;
+begin
+  NSearch:= TNMovie.Create;
+  zResult:= TzNMovie.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNNews;
+var
+  NSearch: TNNews;
+  zResult: TzNNews;
+
+  nMax, idx: Integer;
+  AResult: TNSearchNews;
+begin
+  NSearch:= TNNews.Create;
+  zResult:= TzNNews.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.description);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNShop;
+var
+  NSearch: TNShop;
+  zResult: TzNShop;
+
+  nMax, idx: Integer;
+  AResult: TNSearchShop;
+begin
+  NSearch:= TNShop.Create;
+  zResult:= TzNShop.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
+procedure TFMain.parseNWeb;
+var
+  NSearch: TNWeb;
+  zResult: TzNWeb;
+
+  nMax, idx: Integer;
+  AResult: TNSearchWeb;
+begin
+  NSearch:= TNWeb.Create;
+  zResult:= TzNWeb.Create;
+  try
+    if NSearch.getNSearch(etSearch.Text, zResult) then
+    begin
+      logM('OK' + NSearch.OutMsg);
+      nMax:= zResult.count;
+      for idx:= 0 to nMax - 1 do
+      begin
+        AResult:= zResult.zSearchItem[idx];
+        logM(AResult.title + ' => ' + AResult.link);
+      end;
+    end
+    else
+      logM('Fail' + NSearch.OutMsg);
+  finally
+    zResult.Free;
+    NSearch.Free;
+  end;
+end;
+
 procedure TFMain.pcMainChange(Sender: TObject);
 begin
   if TPageControl(Sender).ActivePage = tsTTS then
@@ -223,6 +714,10 @@ begin
   else if TPageControl(Sender).ActivePage = tsMap then
   begin
     btMapShow.Click;
+  end
+  else if TPageControl(Sender).ActivePage = tsSearch then
+  begin
+    cbSearchType.ItemIndex:= 0;
   end;
 end;
 

@@ -1,6 +1,6 @@
 object FMain: TFMain
-  Left = 469
-  Top = 55
+  Left = 1764
+  Top = 108
   Caption = 'Sample'
   ClientHeight = 683
   ClientWidth = 1080
@@ -19,13 +19,13 @@ object FMain: TFMain
     Left = 0
     Top = 0
     Width = 1080
-    Height = 579
-    ActivePage = tsMap
+    Height = 536
+    ActivePage = tsSearch
     Align = alClient
     TabOrder = 0
     OnChange = pcMainChange
     OnChanging = pcMainChanging
-    ExplicitHeight = 536
+    ExplicitHeight = 579
     object tsInit: TTabSheet
       Caption = 'tsInit'
       object Label1: TLabel
@@ -150,7 +150,7 @@ object FMain: TFMain
         Left = 0
         Top = 97
         Width = 1072
-        Height = 454
+        Height = 411
         Align = alClient
         ImeName = 'Microsoft IME 2010'
         Lines.Strings = (
@@ -274,19 +274,77 @@ object FMain: TFMain
         Left = 0
         Top = 81
         Width = 1072
-        Height = 470
+        Height = 427
         Align = alClient
         TabOrder = 1
-        ExplicitTop = 122
-        ExplicitHeight = 429
+      end
+    end
+    object tsSearch: TTabSheet
+      Caption = 'tsSearch'
+      ImageIndex = 3
+      ExplicitLeft = 8
+      ExplicitTop = 22
+      ExplicitWidth = 0
+      ExplicitHeight = 551
+      object Panel3: TPanel
+        Left = 0
+        Top = 0
+        Width = 1072
+        Height = 49
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 0
+        object btSearch: TButton
+          Left = 16
+          Top = 14
+          Width = 75
+          Height = 25
+          Caption = 'btSearch'
+          TabOrder = 0
+          OnClick = btSearchClick
+        end
+        object etSearch: TEdit
+          Left = 97
+          Top = 16
+          Width = 121
+          Height = 21
+          ImeName = 'Microsoft IME 2010'
+          TabOrder = 1
+          Text = 'API'
+          OnKeyPress = etSearchKeyPress
+        end
+        object cbSearchType: TComboBox
+          Left = 288
+          Top = 16
+          Width = 145
+          Height = 21
+          Style = csDropDownList
+          ImeName = 'Microsoft IME 2010'
+          TabOrder = 2
+          Items.Strings = (
+            #48660#47196#44536
+            #45684#49828
+            #52293
+            #49457#51064' '#44160#49353#50612' '#54032#48324
+            #48177#44284#49324#51204
+            #50689#54868
+            #52852#54168#44544
+            #51648#49885'iN'
+            #51648#50669
+            #50724#53440#48320#54872
+            #50937#47928#49436
+            #51060#48120#51648
+            #49660#54609
+            #51204#47928#51088#47308)
+        end
       end
     end
   end
   object lbLog: TListBox
     Left = 0
-    Top = 579
+    Top = 536
     Width = 1080
-    Height = 104
+    Height = 147
     Align = alBottom
     ImeName = 'Microsoft IME 2010'
     ItemHeight = 13
