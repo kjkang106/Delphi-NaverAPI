@@ -3,7 +3,7 @@ unit UNSearchModel;
 interface
 
 uses
-  Classes, SysUtils, Generics.Collections, DBXJSON;
+  Classes, SysUtils, Generics.Collections, DBXJSON, Rtti, TypInfo;
 
 type
   TNSearchType = (nstBlog, nstNews, nstBookHD, {nstBookDT,} nstAdultWord, nstEncyc,
@@ -146,6 +146,7 @@ type
       procedure parseParam(const doc:TJSONObject; name: string; var value: string); overload;
       procedure parseParam(const doc:TJSONObject; name: string; var value: Real); overload;
       procedure parseParam(const doc:TJSONObject; name: string; var value: Integer); overload;
+      procedure parseParams(const doc:TJSONObject; ATypeInfo, tgtInstance: Pointer);
 
       procedure parseNBlog(zItems: TJSONArray);
       procedure parseNNews(zItems: TJSONArray);
@@ -280,12 +281,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchBlog);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'description', ASearch.description);
-    parseParam(JoItems, 'bloggername', ASearch.bloggername);
-    parseParam(JoItems, 'bloggerlink', ASearch.bloggerlink);
-    parseParam(JoItems, 'postdate', ASearch.postdate);
+    parseParams(JoItems, TypeInfo(TNSearchBlog), @ASearch);
     TzNSearchBlog(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -303,8 +299,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchBookDT);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
+    parseParams(JoItems, TypeInfo(TNSearchBookDT), @ASearch);
     TzNSearchBookDT(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -322,16 +317,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchBookHD);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'image', ASearch.image);
-    parseParam(JoItems, 'author', ASearch.author);
-    parseParam(JoItems, 'price', ASearch.price);
-    parseParam(JoItems, 'discount', ASearch.discount);
-    parseParam(JoItems, 'publisher', ASearch.publisher);
-    parseParam(JoItems, 'pubdate', ASearch.pubdate);
-    parseParam(JoItems, 'isbn', ASearch.isbn);
-    parseParam(JoItems, 'description', ASearch.description);
+    parseParams(JoItems, TypeInfo(TNSearchBookHD), @ASearch);
     TzNSearchBookHD(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -349,11 +335,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchCafeArticle);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'description', ASearch.description);
-    parseParam(JoItems, 'cafename', ASearch.cafename);
-    parseParam(JoItems, 'cafeurl', ASearch.cafeurl);
+    parseParams(JoItems, TypeInfo(TNSearchCafeArticle), @ASearch);
     TzNSearchCafeArticle(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -371,9 +353,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchDoc);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'description', ASearch.description);
+    parseParams(JoItems, TypeInfo(TNSearchDoc), @ASearch);
     TzNSearchDoc(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -391,10 +371,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchEncyc);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'description', ASearch.description);
-    parseParam(JoItems, 'thumbnail', ASearch.thumbnail);
+    parseParams(JoItems, TypeInfo(TNSearchEncyc), @ASearch);
     TzNSearchEncyc(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -422,11 +399,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchImage);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'thumbnail', ASearch.thumbnail);
-    parseParam(JoItems, 'sizeheight', ASearch.sizeheight);
-    parseParam(JoItems, 'sizewidth', ASearch.sizewidth);
+    parseParams(JoItems, TypeInfo(TNSearchImage), @ASearch);
     TzNSearchImage(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -444,9 +417,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchKin);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'description', ASearch.description);
+    parseParams(JoItems, TypeInfo(TNSearchKin), @ASearch);
     TzNSearchKin(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -464,15 +435,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchLocal);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'category', ASearch.category);
-    parseParam(JoItems, 'description', ASearch.description);
-    parseParam(JoItems, 'telephone', ASearch.telephone);
-    parseParam(JoItems, 'address', ASearch.address);
-    parseParam(JoItems, 'roadAddress', ASearch.roadAddress);
-    parseParam(JoItems, 'mapx', ASearch.mapx);
-    parseParam(JoItems, 'mapy', ASearch.mapy);
+    parseParams(JoItems, TypeInfo(TNSearchLocal), @ASearch);
     TzNSearchLocal(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -490,14 +453,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchMovie);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'image', ASearch.image);
-    parseParam(JoItems, 'subtitle', ASearch.subtitle);
-    parseParam(JoItems, 'pubDate', ASearch.pubDate);
-    parseParam(JoItems, 'director', ASearch.director);
-    parseParam(JoItems, 'actor', ASearch.actor);
-    parseParam(JoItems, 'userRating', ASearch.userRating);
+    parseParams(JoItems, TypeInfo(TNSearchMovie), @ASearch);
     TzNSearchMovie(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -515,11 +471,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchNews);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'originallink', ASearch.originallink);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'description', ASearch.description);
-    parseParam(JoItems, 'pubDate', ASearch.pubDate);
+    parseParams(JoItems, TypeInfo(TNSearchNews), @ASearch);
     TzNSearchNews(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -537,14 +489,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchShop);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'image', ASearch.image);
-    parseParam(JoItems, 'lprice', ASearch.lprice);
-    parseParam(JoItems, 'hprice', ASearch.hprice);
-    parseParam(JoItems, 'mallName', ASearch.mallName);
-    parseParam(JoItems, 'productId', ASearch.productId);
-    parseParam(JoItems, 'productType', ASearch.productType);
+    parseParams(JoItems, TypeInfo(TNSearchShop), @ASearch);
     TzNSearchShop(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -562,9 +507,7 @@ begin
     JoItems:= TJSONObject(zItems.Get(idx));
 
     ASearch:= Default(TNSearchWeb);
-    parseParam(JoItems, 'title', ASearch.title);
-    parseParam(JoItems, 'link', ASearch.link);
-    parseParam(JoItems, 'description', ASearch.description);
+    parseParams(JoItems, TypeInfo(TNSearchWeb), @ASearch);
     TzNSearchWeb(FzSearchItem).Add(ASearch);
     Inc(FCount);
   end;
@@ -578,6 +521,48 @@ begin
     Exit;
   if doc.Get(name).JsonValue.Value <> '' then
     value:= TJSONNumber(doc.Get(name).JsonValue).AsInt;
+end;
+
+procedure TNSearchResult<TzList>.parseParams(const doc: TJSONObject; ATypeInfo,
+  tgtInstance: Pointer);
+var
+  rttiContext: TRttiContext;
+  rttiType: TRttiType;
+  fields: TArray<TRttiField>;
+  i: Word;
+
+  name: string;
+  iValue: Integer;
+  nValue: Real;
+  sValue: string;
+begin
+  rttiType:= rttiContext.GetType(ATypeInfo);
+  fields  := rttiType.GetFields;
+  try
+    for i:= low(fields) to high(fields) do
+    begin
+      name:= fields[i].Name;
+      if fields[i].FieldType.TypeKind = tkInteger then
+      begin
+        parseParam(doc, name, iValue);
+        fields[i].SetValue(tgtInstance, iValue);
+      end
+      else if fields[i].FieldType.TypeKind = tkFloat then
+      begin
+        parseParam(doc, name, nValue);
+        fields[i].SetValue(tgtInstance, nValue);
+      end
+      else if fields[i].FieldType.TypeKind = tkClass then
+      else if fields[i].FieldType.TypeKind = tkRecord then
+      else
+      begin
+        parseParam(doc, name, sValue);
+        fields[i].SetValue(tgtInstance, sValue);
+      end;
+    end;
+  finally
+    Finalize(fields);
+  end;
 end;
 
 function TNSearchResult<TzList>.parseResult(NSearchType: TNSearchType;
@@ -606,10 +591,7 @@ begin
     end
     else
     begin
-      parseParam(JoResult, 'lastBuildDate', FSerarchHead.lastBuildDate);
-      parseParam(JoResult, 'total', FSerarchHead.total);
-      parseParam(JoResult, 'start', FSerarchHead.start);
-      parseParam(JoResult, 'display', FSerarchHead.display);
+      parseParams(JoResult, TypeInfo(TNSearchHead), @FSerarchHead);
       zItems:= TJSONArray(JoResult.Get('items').JsonValue);
       case NSearchType of
         nstBlog:        parseNBlog(zItems);
