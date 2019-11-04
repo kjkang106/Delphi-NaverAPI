@@ -3,7 +3,7 @@ unit UNAPIClient;
 interface
 
 uses
-  Classes, SysUtils, IdHTTP, IdSSLOpenSSL, IdURI;
+  Classes, SysUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdGlobal;
 
 type
   TNAPIClient = class
@@ -107,7 +107,8 @@ begin
   FIdHTTP.Request.CustomHeaders.AddValue('X-Naver-Client-Id', NAPIClientID);
   FIdHTTP.Request.CustomHeaders.AddValue('X-Naver-Client-Secret', NAPIClientSecret);
   try
-    FIdHTTP.Get(TIdURI.URLEncode(FHost + '?' + Msg, TEncoding.UTF8), RcvMsg);
+    //FIdHTTP.Get(TIdURI.URLEncode(FHost + '?' + Msg, TEncoding.UTF8), RcvMsg);
+    FIdHTTP.Get(TIdURI.URLEncode(FHost + '?' + Msg, IndyTextEncoding_UTF8), RcvMsg);
     FOutMsg:= FOutMsg + '[Recv] ' + FIdHTTP.Response.ResponseText + #13#10;
     if FIdHTTP.Response.ResponseCode = 200 then
     begin
